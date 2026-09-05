@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { LayoutDashboard, Package, Users, Settings, Plus, Search, Bell, Menu, X, ArrowUpRight, Truck, CircleDot, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { LogoutButton } from '@/components/auth/LogoutButton'
 
 type Order = { id: string; customer: string; items: string; status: string; time: string; color: string }
 const initialOrders: Order[] = [
@@ -91,6 +92,7 @@ export default function AdminDashboard() {
               <Plus size={16} />
               New Order
             </button>
+            <LogoutButton />
           </div>
         </header>
 

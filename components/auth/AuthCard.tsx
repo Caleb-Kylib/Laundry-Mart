@@ -35,6 +35,16 @@ export function AuthCard() {
 
       <LoginForm />
 
+      {/* Demo credentials — remove before production */}
+      <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-xs text-slate-500">
+        <p className="font-semibold text-slate-600 mb-2">Demo accounts</p>
+        <ul className="space-y-1">
+          <li><span className="font-medium text-slate-700">Super Admin:</span> admin@laundryos.co.ke / SuperAdmin@123</li>
+          <li><span className="font-medium text-slate-700">Manager:</span> manager@laundryos.co.ke / Manager@123</li>
+          <li><span className="font-medium text-slate-700">Employee:</span> employee@laundryos.co.ke / Employee@123</li>
+        </ul>
+      </div>
+
       <div className="mt-8 relative flex items-center justify-center">
         <div className="absolute inset-x-0 h-px bg-slate-200"></div>
         <span className="relative bg-white px-4 text-xs font-semibold text-slate-400 uppercase tracking-widest">

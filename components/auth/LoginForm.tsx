@@ -1,57 +1,30 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { PasswordInput } from './PasswordInput'
 import { RememberMe } from './RememberMe'
-
-const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
-  rememberMe: z.boolean().optional(),
-})
-
-type LoginFormValues = z.infer<typeof loginSchema>
+import { login, type LoginState } from '@/app/actions/auth'
 
 export function LoginForm() {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [state, formAction, isSubmitting] = useActionState<LoginState, FormData>(login, {})
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
+  // React to the server action result: show a toast then navigate on success.
+  useEffect(() => {
+    if (state.error) {
+      setToast({ message: state.error, type: 'error' })
+    } else if (state.redirectTo) {
+      setToast({ message: 'Welcome back!', type: 'success' })
+      const t = setTimeout(() => router.push(state.redirectTo!), 800)
+      return () => clearTimeout(t)
     }
-  })
+  }, [state, router])
 
-  const onSubmit = async (data: LoginFormValues) => {
-    setIsSubmitting(true)
-    setToast(null)
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // In a real app, this is where you'd call your auth endpoint
-    
-    setToast({ message: 'Welcome back!', type: 'success' })
-    
-    // Redirect after short delay
-    setTimeout(() => {
-      router.push('/admin')
-    }, 1000)
-  }
+  const succeeded = Boolean(state.redirectTo)
 
   return (
     <div className="w-full">
@@ -74,7 +47,7 @@ export function LoginForm() {
         )}
       </AnimatePresence>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form action={formAction} className="space-y-5">
         {/* Email Field */}
         <div className="space-y-1.5">
           <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
@@ -82,28 +55,12 @@ export function LoginForm() {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
+            required
             placeholder="you@laundrybusiness.com"
-            className={`w-full h-11 px-4 rounded-lg border transition-all duration-200 outline-none
-              ${errors.email 
-                ? 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-4 focus:ring-red-500/10' 
-                : 'border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10'
-              }
-            `}
-            {...register('email')}
+            className="w-full h-11 px-4 rounded-lg border transition-all duration-200 outline-none border-slate-200 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
           />
-          <AnimatePresence>
-            {errors.email && (
-              <motion.p
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="text-red-500 text-xs font-medium pt-1 flex items-center gap-1"
-              >
-                <AlertCircle size={12} /> {errors.email.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Password Field */}
@@ -113,27 +70,15 @@ export function LoginForm() {
           </label>
           <PasswordInput
             id="password"
+            name="password"
+            required
             placeholder="••••••••"
-            error={errors.password?.message}
-            {...register('password')}
           />
-          <AnimatePresence>
-            {errors.password && (
-              <motion.p
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="text-red-500 text-xs font-medium pt-1 flex items-center gap-1"
-              >
-                <AlertCircle size={12} /> {errors.password.message}
-              </motion.p>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Options Row */}
         <div className="flex items-center justify-between pt-1 pb-2">
-          <RememberMe {...register('rememberMe')} />
+          <RememberMe name="rememberMe" />
           <a href="#" className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
             Forgot Password?
           </a>
@@ -142,7 +87,7 @@ export function LoginForm() {
         {/* Submit Button */}
         <motion.button
           type="submit"
-          disabled={isSubmitting || toast?.type === 'success'}
+          disabled={isSubmitting || succeeded}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
           className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all shadow-lg shadow-blue-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
