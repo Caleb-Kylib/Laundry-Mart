@@ -1,84 +1,19 @@
 import { requireRole } from '@/lib/guard'
-import { getPermissions, ROLE_LABELS } from '@/lib/rbac'
+import { ROLE_LABELS } from '@/lib/rbac'
 import { LogoutButton } from '@/components/auth/LogoutButton'
-import { Package, CheckCircle2, Clock } from 'lucide-react'
+import { ArrowRight, CheckCircle2, Clock3, Package, ScanLine, Sparkles, Timer, Truck } from 'lucide-react'
 
-const assignedOrders = [
-  { id: '#LD-2849', customer: 'Amina Wanjiku', items: '3 items', status: 'Washing', tone: 'bg-blue-100 text-blue-700' },
-  { id: '#LD-2851', customer: 'Peter Otieno', items: '5 items', status: 'Drying', tone: 'bg-amber-100 text-amber-700' },
-  { id: '#LD-2853', customer: 'Lucy Achieng', items: '2 items', status: 'Ready', tone: 'bg-emerald-100 text-emerald-700' },
+const orders = [
+  { id: '#LD-2849', customer: 'Amina Wanjiku', task: 'Fold & quality check', due: 'Due in 32 min', status: 'Ready for finishing', color: 'bg-blue-50 text-blue-700 border-blue-100', progress: 78 },
+  { id: '#LD-2851', customer: 'Peter Otieno', task: 'Move to dryer', due: 'Due in 1h 10 min', status: 'Wash cycle 2 of 2', color: 'bg-amber-50 text-amber-700 border-amber-100', progress: 52 },
+  { id: '#LD-2853', customer: 'Lucy Achieng', task: 'Final packaging', due: 'Ready for handoff', status: 'Quality approved', color: 'bg-emerald-50 text-emerald-700 border-emerald-100', progress: 100 },
 ]
 
 export default async function EmployeeDashboard() {
   const session = await requireRole('employee')
-  const permissions = getPermissions(session.role)
-
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-      <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold">L</div>
-          <span className="font-bold text-lg tracking-tight">Laundry<span className="text-blue-600">OS</span></span>
-          <span className="ml-3 px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700">
-            {ROLE_LABELS[session.role]}
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="hidden sm:block text-sm text-gray-500">{session.name}</span>
-          <LogoutButton />
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto p-6 sm:p-8 space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Hi {session.name.split(' ')[0]}!</h1>
-          <p className="text-gray-500 mt-1">Here are the orders assigned to you today.</p>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: 'Assigned', value: '3', icon: Package, tone: 'text-blue-600 bg-blue-100' },
-            { label: 'In Progress', value: '2', icon: Clock, tone: 'text-amber-600 bg-amber-100' },
-            { label: 'Completed', value: '7', icon: CheckCircle2, tone: 'text-emerald-600 bg-emerald-100' },
-          ].map(s => (
-            <div key={s.label} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${s.tone}`}>
-                <s.icon size={18} />
-              </div>
-              <p className="text-xs font-medium text-gray-500">{s.label}</p>
-              <p className="text-xl font-bold mt-0.5">{s.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <section className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-gray-200">
-            <h2 className="font-bold text-lg">My Orders</h2>
-          </div>
-          <div className="divide-y divide-gray-100">
-            {assignedOrders.map(o => (
-              <div key={o.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                <div>
-                  <p className="font-semibold text-sm">{o.customer}</p>
-                  <p className="text-xs text-gray-500">{o.id} &bull; {o.items}</p>
-                </div>
-                <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${o.tone}`}>{o.status}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <h2 className="font-bold text-lg mb-3">Your Access</h2>
-          <div className="flex flex-wrap gap-2">
-            {[...permissions].map(p => (
-              <span key={p} className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
-                {p}
-              </span>
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
-  )
+  return <div className="min-h-screen bg-[#f6f8fc] text-slate-900"><header className="h-[72px] bg-white/85 backdrop-blur-xl border-b border-slate-200/80 px-5 sm:px-8 flex items-center justify-between sticky top-0 z-20"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white grid place-items-center shadow-lg shadow-blue-200 font-extrabold">L</div><div><p className="font-extrabold tracking-tight text-lg">Laundry<span className="text-blue-600">OS</span></p><p className="text-[10px] font-bold tracking-[.18em] text-slate-400">MY WORKSPACE</p></div><span className="hidden sm:block ml-3 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700">{ROLE_LABELS[session.role]}</span></div><div className="flex items-center gap-4"><span className="hidden sm:block text-sm font-semibold text-slate-600">{session.name}</span><LogoutButton/></div></header><main className="max-w-6xl mx-auto p-5 sm:p-8 space-y-6">
+    <section className="rounded-3xl overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-slate-900 text-white p-6 sm:p-8 relative"><div className="absolute right-0 top-0 h-60 w-60 rounded-full bg-cyan-300/20 blur-3xl"/><div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-5"><div><p className="flex items-center gap-2 text-xs font-bold tracking-[.16em] text-blue-100"><Sparkles size={14}/> YOUR SHIFT AT A GLANCE</p><h1 className="text-3xl font-extrabold tracking-tight mt-2">Hi, {session.name.split(' ')[0]}. You&apos;re on a roll.</h1><p className="text-blue-100 mt-2">You&apos;ve completed 7 orders today—two more than your usual pace.</p></div><div className="rounded-2xl bg-white/10 border border-white/20 p-4 min-w-[180px]"><p className="text-xs text-blue-100">Focus time left</p><p className="text-3xl font-extrabold mt-1">3h 20m</p><p className="text-xs text-emerald-200 mt-1">On track for shift goal</p></div></div></section>
+    <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[[Package,'Assigned','3','bg-blue-50 text-blue-600'],[Timer,'In progress','2','bg-amber-50 text-amber-600'],[CheckCircle2,'Completed','7','bg-emerald-50 text-emerald-600'],[Truck,'Ready to handoff','1','bg-violet-50 text-violet-600']].map(([Icon,label,value,tone]) => { const MetricIcon = Icon as typeof Package; return <article key={label as string} className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-sm"><div className={`w-10 h-10 grid place-items-center rounded-xl ${tone as string}`}><MetricIcon size={19}/></div><p className="text-xs font-medium text-slate-500 mt-4">{label as string}</p><p className="text-2xl font-extrabold mt-0.5">{value as string}</p></article>})}</section>
+    <section className="grid lg:grid-cols-[1.45fr_.9fr] gap-6"><article className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm"><div className="p-6 flex items-center justify-between border-b border-slate-100"><div><p className="text-xs font-bold tracking-[.16em] text-blue-600">WORK QUEUE</p><h2 className="font-extrabold text-xl mt-1">Your next best moves</h2></div><button className="w-10 h-10 rounded-xl bg-slate-900 text-white grid place-items-center"><ScanLine size={18}/></button></div><div className="divide-y divide-slate-100">{orders.map(order => <div key={order.id} className="p-5 hover:bg-slate-50 transition-colors"><div className="flex items-start justify-between gap-3"><div><p className="font-bold">{order.customer} <span className="text-slate-400 font-medium text-xs">{order.id}</span></p><p className="text-sm text-slate-500 mt-1">{order.task}</p></div><span className={`text-xs font-bold border rounded-full px-2.5 py-1 ${order.color}`}>{order.due}</span></div><div className="mt-4 flex items-center gap-3"><div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden"><div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600" style={{width:`${order.progress}%`}}/></div><span className="text-xs font-bold text-slate-500">{order.progress}%</span><ArrowRight className="text-blue-600" size={17}/></div><p className="mt-2 text-xs text-slate-400">{order.status}</p></div>)}</div></article><div className="space-y-6"><article className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm"><div className="flex gap-3"><div className="w-10 h-10 shrink-0 rounded-xl bg-amber-50 text-amber-600 grid place-items-center"><Clock3 size={19}/></div><div><p className="text-xs font-bold tracking-[.16em] text-amber-600">TIME SAVER</p><h2 className="font-extrabold text-lg mt-1">Finish LD-2849 first</h2></div></div><p className="text-sm leading-6 text-slate-500 mt-4">Completing this quality check now frees the folding desk before the 1 PM rush.</p><button className="mt-4 text-sm font-bold text-blue-600 inline-flex items-center gap-1">Start task <ArrowRight size={15}/></button></article><article className="rounded-3xl bg-slate-900 text-white p-6"><p className="text-xs font-bold tracking-[.16em] text-blue-300">PERSONAL BEST</p><p className="text-4xl font-extrabold mt-3">98.6%</p><p className="text-sm text-slate-300 mt-1">Your quality score this week</p><div className="mt-5 h-2 rounded-full bg-white/10"><div className="w-[98.6%] h-full rounded-full bg-gradient-to-r from-blue-400 to-emerald-300"/></div><p className="text-xs text-emerald-300 mt-3">Top 10% of the operations team</p></article></div></section>
+  </main></div>
 }

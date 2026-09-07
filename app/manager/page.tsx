@@ -1,70 +1,24 @@
 import { requireRole } from '@/lib/guard'
-import { getPermissions, ROLE_LABELS } from '@/lib/rbac'
+import { ROLE_LABELS } from '@/lib/rbac'
 import { LogoutButton } from '@/components/auth/LogoutButton'
-import { BarChart3, Users, Package, ClipboardCheck, TrendingUp } from 'lucide-react'
+import { Activity, ArrowUpRight, BarChart3, CheckCircle2, Clock3, Gauge, Sparkles, TrendingUp, Users } from 'lucide-react'
+
+const week = [52, 68, 48, 78, 64, 91, 84]
 
 export default async function ManagerDashboard() {
   const session = await requireRole('manager')
-  const permissions = getPermissions(session.role)
-
   const metrics = [
-    { label: 'Team Members', value: '14', icon: Users, tone: 'text-blue-600 bg-blue-100' },
-    { label: 'Orders Today', value: '32', icon: Package, tone: 'text-indigo-600 bg-indigo-100' },
-    { label: 'Quality Checks', value: '9', icon: ClipboardCheck, tone: 'text-emerald-600 bg-emerald-100' },
-    { label: 'Weekly Growth', value: '+12.5%', icon: TrendingUp, tone: 'text-amber-600 bg-amber-100' },
+    { label: 'Revenue this week', value: 'KSh 384,920', detail: '+18.2% vs last week', icon: TrendingUp, tone: 'from-indigo-600 to-blue-600' },
+    { label: 'Orders completed', value: '186', detail: '94.8% on time', icon: CheckCircle2, tone: 'from-emerald-500 to-teal-600' },
+    { label: 'Average turnaround', value: '19h 24m', detail: '42 min faster than target', icon: Clock3, tone: 'from-violet-500 to-indigo-600' },
+    { label: 'Team utilisation', value: '87%', detail: '2 team members available', icon: Users, tone: 'from-amber-500 to-orange-500' },
   ]
-
-  return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-      <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-30">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold">L</div>
-          <span className="font-bold text-lg tracking-tight">Laundry<span className="text-indigo-600">OS</span></span>
-          <span className="ml-3 px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-50 text-indigo-700">
-            {ROLE_LABELS[session.role]}
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="hidden sm:block text-sm text-gray-500">{session.name}</span>
-          <LogoutButton />
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto p-6 sm:p-8 space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Manager Dashboard</h1>
-          <p className="text-gray-500 mt-1">Oversee operations, staff, and reporting.</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {metrics.map(m => (
-            <div key={m.label} className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${m.tone}`}>
-                <m.icon size={20} />
-              </div>
-              <p className="text-sm font-medium text-gray-500">{m.label}</p>
-              <p className="text-2xl font-bold mt-1">{m.value}</p>
-            </div>
-          ))}
-        </div>
-
-        <section className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 size={18} className="text-indigo-600" />
-            <h2 className="font-bold text-lg">Your Access</h2>
-          </div>
-          <p className="text-sm text-gray-500 mb-4">
-            Permissions granted to the {ROLE_LABELS[session.role]} role:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[...permissions].map(p => (
-              <span key={p} className="px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
-                {p}
-              </span>
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
-  )
+  return <div className="min-h-screen bg-[#f6f8fc] text-slate-900">
+    <header className="h-[72px] bg-white/85 backdrop-blur-xl border-b border-slate-200/80 px-5 sm:px-8 flex items-center justify-between sticky top-0 z-20"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white grid place-items-center shadow-lg shadow-blue-200 font-extrabold">L</div><div><p className="font-extrabold tracking-tight text-lg">Laundry<span className="text-blue-600">OS</span></p><p className="text-[10px] font-bold tracking-[.18em] text-slate-400">OPERATIONS HUB</p></div><span className="hidden sm:block ml-3 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700">{ROLE_LABELS[session.role]}</span></div><div className="flex items-center gap-4"><div className="hidden md:block text-right"><p className="text-sm font-bold">{session.name}</p><p className="text-xs text-slate-500">Operations lead</p></div><LogoutButton /></div></header>
+    <main className="max-w-7xl mx-auto p-5 sm:p-8 space-y-6">
+      <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white p-6 sm:p-8"><div className="absolute -right-16 -top-24 h-72 w-72 rounded-full bg-blue-500/30 blur-3xl"/><div className="relative flex flex-col lg:flex-row lg:items-end justify-between gap-6"><div><p className="flex items-center gap-2 text-xs font-bold tracking-[.18em] text-blue-300"><Sparkles size={14}/> DAILY OPERATIONS BRIEF</p><h1 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight">Everything is moving in the right direction.</h1><p className="mt-3 text-slate-300 max-w-2xl">Your team is ahead of the service-level target and Saturday demand is building. Prioritise the six express orders before 2:00 PM.</p></div><div className="rounded-2xl bg-white/10 border border-white/10 px-5 py-4 min-w-[210px]"><p className="text-xs text-slate-300">Today&apos;s service health</p><div className="flex items-end gap-3 mt-1"><span className="text-4xl font-extrabold">92</span><span className="text-sm text-emerald-300 mb-1">Excellent</span></div><div className="mt-3 h-1.5 rounded-full bg-white/15"><div className="h-full w-[92%] rounded-full bg-gradient-to-r from-blue-400 to-emerald-400"/></div></div></div></section>
+      <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">{metrics.map(m => <article key={m.label} className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm"><div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${m.tone} text-white grid place-items-center shadow-lg`}><m.icon size={20}/></div><p className="mt-5 text-sm font-medium text-slate-500">{m.label}</p><p className="mt-1 text-2xl font-extrabold tracking-tight">{m.value}</p><p className="mt-2 text-xs font-semibold text-emerald-600 flex gap-1 items-center"><ArrowUpRight size={13}/>{m.detail}</p></article>)}</section>
+      <section className="grid lg:grid-cols-[1.55fr_1fr] gap-6"><article className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm"><div className="flex justify-between items-start"><div><p className="text-xs font-bold tracking-[.16em] text-blue-600">WEEKLY THROUGHPUT</p><h2 className="mt-1 font-extrabold text-xl">Orders completed</h2><p className="mt-1 text-sm text-slate-500">186 orders, with Saturday projected to finish strongest.</p></div><BarChart3 className="text-blue-600"/></div><div className="mt-8 h-44 flex gap-3 items-end border-b border-slate-100 pb-1">{week.map((height, i) => <div key={i} className="flex-1 h-full flex flex-col justify-end gap-2 group"><div style={{height: `${height}%`}} className={`rounded-t-xl transition-all ${i === 5 ? 'bg-gradient-to-t from-indigo-600 to-blue-400 shadow-lg shadow-blue-100' : 'bg-blue-100 group-hover:bg-blue-300'}`}/><span className="text-center text-[11px] font-bold text-slate-400">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]}</span></div>)}</div><div className="mt-5 grid sm:grid-cols-3 gap-3">{[['Peak window','11 AM – 2 PM','bg-blue-50'],['Quality pass rate','98.4%','bg-emerald-50'],['Repeat customers','64% of orders','bg-violet-50']].map(([a,b,c]) => <div key={a} className={`rounded-xl ${c} p-3`}><p className="text-xs text-slate-500">{a}</p><p className="font-bold text-sm mt-1">{b}</p></div>)}</div></article><article className="rounded-3xl bg-gradient-to-b from-blue-600 to-indigo-700 text-white p-6 shadow-lg shadow-blue-100"><div className="flex justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-blue-100">CAPACITY RADAR</p><h2 className="font-extrabold text-xl mt-1">Keep an eye on drying</h2></div><Gauge className="text-blue-200"/></div><div className="mt-8 grid place-items-center"><div className="w-36 h-36 rounded-full border-[15px] border-white/15 border-t-white border-r-cyan-300 grid place-items-center"><div className="text-center"><b className="text-3xl">78%</b><span className="block text-xs text-blue-100">in use</span></div></div></div><div className="mt-7 space-y-3 text-sm">{[['Wash bays','64%'],['Drying racks','78%'],['Finishing desks','51%']].map(([name,value]) => <div key={name}><div className="flex justify-between text-blue-50"><span>{name}</span><b>{value}</b></div><div className="h-1.5 mt-1.5 rounded-full bg-white/15"><div className="h-full rounded-full bg-cyan-300" style={{width:value}}/></div></div>)}</div></article></section>
+      <section className="grid md:grid-cols-2 gap-6"><article className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm"><div className="flex justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-blue-600">TEAM PULSE</p><h2 className="font-extrabold text-xl mt-1">Shift readiness</h2></div><Activity className="text-blue-600"/></div><div className="mt-5 space-y-4">{[['Finishing & QC','4 of 4 checked in','bg-emerald-500'],['Wash floor','5 of 6 checked in','bg-blue-500'],['Drivers','3 of 4 on route','bg-amber-500']].map(([team,status,tone]) => <div key={team} className="flex items-center gap-3"><span className={`w-2.5 h-2.5 rounded-full ${tone}`}/><div className="flex-1"><p className="text-sm font-bold">{team}</p><p className="text-xs text-slate-500">{status}</p></div><span className="text-xs font-semibold text-slate-400">Live</span></div>)}</div></article><article className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm"><p className="text-xs font-bold tracking-[.16em] text-blue-600">NEXT BEST ACTION</p><h2 className="font-extrabold text-xl mt-1">Protect today&apos;s delivery promise</h2><p className="mt-3 text-sm leading-6 text-slate-500">Six express orders enter finishing in the next hour. Moving one person from wash floor to quality control will keep the 6 PM delivery wave on target.</p><button className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-4 py-2.5 text-sm font-bold">Review work queue <ArrowUpRight size={16}/></button></article></section>
+    </main></div>
 }

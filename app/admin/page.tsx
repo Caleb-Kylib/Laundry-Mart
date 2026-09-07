@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { LayoutDashboard, Package, Users, Settings, Plus, Search, Bell, Menu, X, ArrowUpRight, Truck, CircleDot, ChevronDown, MoreHorizontal } from 'lucide-react'
+import { LayoutDashboard, Package, Users, Settings, Plus, Search, Bell, Menu, X, ArrowUpRight, Truck, CircleDot, ChevronDown, MoreHorizontal, BarChart3, Sparkles, Clock3, CheckCircle2, TrendingUp } from 'lucide-react'
 import { LogoutButton } from '@/components/auth/LogoutButton'
 
 type Order = { id: string; customer: string; items: string; status: string; time: string; color: string }
@@ -19,6 +19,7 @@ export default function AdminDashboard() {
     { name: 'Overview', icon: LayoutDashboard },
     { name: 'Orders', icon: Package },
     { name: 'Customers', icon: Users },
+    { name: 'Analytics', icon: BarChart3 },
     { name: 'Settings', icon: Settings }
   ]
 
@@ -99,7 +100,14 @@ export default function AdminDashboard() {
         <div className="p-4 sm:p-8 overflow-auto flex-1">
           {activeTab === 'Overview' && (
             <div className="max-w-6xl mx-auto space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-6 sm:p-8 text-white">
+                <div className="absolute -right-10 -top-16 h-64 w-64 rounded-full bg-blue-500/30 blur-3xl" />
+                <div className="relative flex flex-col sm:flex-row justify-between gap-5">
+                  <div><p className="text-xs tracking-[.2em] font-bold text-blue-300 flex items-center gap-2"><Sparkles size={14}/> BUSINESS PULSE</p><h2 className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight">A strong week is taking shape.</h2><p className="mt-2 text-slate-300 max-w-xl">Revenue is trending above plan and your delivery promise is holding at 96%. The next opportunity is increasing express-service capacity.</p></div>
+                  <div className="shrink-0 rounded-2xl bg-white/10 border border-white/10 p-4"><p className="text-xs text-slate-300">Weekly target</p><p className="text-2xl font-bold mt-1">84% <span className="text-xs text-emerald-300">+9 pts</span></p><div className="w-40 h-2 mt-3 bg-white/15 rounded-full"><div className="h-full w-[84%] rounded-full bg-gradient-to-r from-blue-400 to-emerald-400"/></div></div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-2">
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight text-gray-900">Good morning, Amina!</h2>
                   <p className="text-gray-500 mt-1">Here's a simplified overview of your laundry business.</p>
@@ -127,6 +135,15 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="grid lg:grid-cols-[1.55fr_1fr] gap-6">
+                <section className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
+                  <div className="flex items-start justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-blue-600">REVENUE MOMENTUM</p><h3 className="text-xl font-bold mt-1">KSh 384,920 <span className="text-sm text-emerald-600">+18.2%</span></h3><p className="text-sm text-gray-500 mt-1">This month, compared with KSh 325,790 last month</p></div><button className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700">This month <ChevronDown size={13} className="inline"/></button></div>
+                  <div className="mt-8 h-40 flex items-end gap-3 border-b border-gray-100">{[48,61,54,75,68,88,82].map((height, index) => <div key={index} className="flex-1 h-full flex flex-col justify-end gap-2"><div style={{ height: `${height}%` }} className={`rounded-t-lg ${index === 5 ? 'bg-gradient-to-t from-indigo-600 to-blue-400 shadow-lg shadow-blue-100' : 'bg-blue-100 hover:bg-blue-300'} transition-colors`}/><span className="text-[10px] text-center text-gray-400">{['M','T','W','T','F','S','S'][index]}</span></div>)}</div>
+                  <div className="grid grid-cols-3 mt-5 gap-3 text-sm"><div><p className="text-gray-400 text-xs">Avg. order</p><p className="font-bold mt-1">KSh 2,068</p></div><div><p className="text-gray-400 text-xs">Repeat rate</p><p className="font-bold mt-1">64%</p></div><div><p className="text-gray-400 text-xs">Peak hour</p><p className="font-bold mt-1">12–2 PM</p></div></div>
+                </section>
+                <section className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6"><div className="flex justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-blue-600">OPERATIONS HEALTH</p><h3 className="font-bold text-xl mt-1">Today&apos;s flow</h3></div><TrendingUp className="text-blue-600"/></div><div className="mt-6 space-y-4">{[[Clock3,'Pickup SLA','92%','bg-blue-500'],[CheckCircle2,'Quality pass rate','98.4%','bg-emerald-500'],[Truck,'On-time delivery','96%','bg-violet-500']].map(([Icon,label,value,tone]) => { const RowIcon = Icon as typeof Clock3; return <div key={label as string}><div className="flex justify-between text-sm"><span className="flex items-center gap-2 font-medium"><RowIcon size={15} className="text-gray-400"/>{label as string}</span><b>{value as string}</b></div><div className="h-1.5 bg-gray-100 rounded-full mt-2"><div className={`h-full rounded-full ${tone as string}`} style={{ width: value as string }}/></div></div>})}</div><div className="mt-6 p-3 rounded-xl bg-amber-50 text-amber-800 text-xs leading-5"><b>Watch:</b> Drying capacity is forecast to reach 83% after 3 PM.</div></section>
               </div>
 
               {/* Recent Orders List */}
