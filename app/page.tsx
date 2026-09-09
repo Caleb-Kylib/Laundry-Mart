@@ -16,6 +16,8 @@ import {
   Instagram,
   Youtube,
   ArrowUpRight,
+  BadgeCheck,
+  CalendarDays,
   Package,
   Truck,
   Clock3,
@@ -26,7 +28,7 @@ export default function Homepage() {
     <div className="min-h-screen bg-white text-gray-900 font-sans selection:bg-blue-100 selection:text-blue-900">
 
       {/* ─────────────── NAVIGATION ─────────────── */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-lg border-b border-gray-100 z-50">
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl border-b border-white/70 shadow-[0_1px_20px_rgba(15,23,42,.04)] z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-xl shadow-lg shadow-blue-200">
@@ -46,7 +48,7 @@ export default function Homepage() {
 
           <div className="flex items-center gap-3">
             <Link href="/login" className="hidden sm:block text-slate-600 font-semibold hover:text-blue-600 transition-colors text-sm">
-              Admin Login
+              Sign in
             </Link>
             <Link
               href="/book"
@@ -59,7 +61,7 @@ export default function Homepage() {
       </nav>
 
       {/* ─────────────── HERO ─────────────── */}
-      <section className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <section className="relative flex items-center justify-center min-h-screen lg:min-h-[780px] overflow-hidden">
         {/* Background image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -70,11 +72,12 @@ export default function Homepage() {
             priority
           />
           {/* Multi-layer gradient for depth */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/75 to-slate-900/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-900/80 to-slate-900/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-32 pb-20 lg:pt-0 lg:pb-0">
+          <div className="grid lg:grid-cols-[1fr_360px] gap-16 items-end">
           <div className="max-w-2xl">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/15 text-blue-300 font-medium text-sm mb-6 border border-blue-400/25 backdrop-blur-sm">
@@ -83,14 +86,14 @@ export default function Homepage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05] text-white">
-              Clean clothes,{' '}
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">
-                delivered fast.
+              Your laundry day,
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-cyan-300 to-indigo-300">
+                beautifully handled.
               </span>
             </h1>
 
             <p className="text-lg md:text-xl text-slate-300 mb-10 leading-relaxed max-w-xl">
-              Professional laundry, dry cleaning & express service with free door-to-door pickup and delivery. Ready in as little as 12 hours.
+              Professional laundry, dry cleaning and express care—picked up and delivered to your door. Fresh clothes, zero admin.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-16">
@@ -122,6 +125,12 @@ export default function Homepage() {
               ))}
             </div>
           </div>
+          <div className="hidden lg:block rounded-[2rem] border border-white/20 bg-white/10 p-5 backdrop-blur-xl shadow-2xl shadow-slate-950/30">
+            <div className="flex items-center justify-between"><div><p className="text-xs font-bold tracking-[.16em] text-blue-200">NEXT AVAILABLE</p><p className="mt-1 text-lg font-bold text-white">Pickup tomorrow</p></div><div className="w-11 h-11 rounded-2xl bg-white/15 grid place-items-center text-cyan-200"><CalendarDays size={20}/></div></div>
+            <div className="mt-5 rounded-2xl bg-slate-950/30 border border-white/10 p-4"><div className="flex justify-between text-sm text-slate-200"><span>Morning window</span><b className="text-white">8:00 – 10:00 AM</b></div><div className="mt-3 h-1.5 rounded-full bg-white/15"><div className="h-full w-[72%] rounded-full bg-gradient-to-r from-cyan-300 to-blue-400"/></div><p className="mt-3 flex items-center gap-1.5 text-xs text-emerald-200"><BadgeCheck size={14}/> Free pickup & delivery included</p></div>
+            <Link href="/book" className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-white py-3 text-sm font-bold text-slate-900 hover:bg-blue-50 transition-colors">Reserve your slot <ArrowUpRight size={16}/></Link>
+          </div>
+          </div>
         </div>
 
         {/* Scroll indicator */}
@@ -132,7 +141,12 @@ export default function Homepage() {
       </section>
 
       {/* ─────────────── SERVICES ─────────────── */}
-      <section id="services" className="py-28 bg-slate-50">
+      <section className="relative z-20 -mt-8 mx-4 sm:mx-6 lg:mx-auto max-w-6xl rounded-2xl bg-white border border-slate-100 shadow-xl shadow-slate-900/10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+          {[['Free door-to-door delivery', 'We collect and return every order', Truck], ['Care you can trust', 'Professionally cleaned and inspected', BadgeCheck], ['Live order updates', 'Know exactly where your laundry is', MapPin]].map(([title, detail, Icon]) => { const ItemIcon = Icon as typeof Truck; return <div key={title as string} className="flex items-center gap-4 px-6 py-5"><div className="w-10 h-10 shrink-0 rounded-xl bg-blue-50 text-blue-600 grid place-items-center"><ItemIcon size={19}/></div><div><p className="text-sm font-bold text-slate-800">{title as string}</p><p className="text-xs text-slate-500 mt-0.5">{detail as string}</p></div></div> })}
+        </div>
+      </section>
+      <section id="services" className="pt-36 pb-28 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-blue-600 font-bold uppercase tracking-widest text-xs">Our Services</span>
